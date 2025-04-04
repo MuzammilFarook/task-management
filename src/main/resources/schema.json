@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["metadata", "users", "settings", "logs"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["generatedAt", "requestId", "source", "pagination"],
+      "properties": {
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "requestId": { "type": "string", "format": "uuid" },
+        "source": { "type": "string" },
+        "pagination": {
+          "type": "object",
+          "required": ["page", "size", "totalPages"],
+          "properties": {
+            "page": { "type": "integer", "minimum": 1 },
+            "size": { "type": "integer", "minimum": 1 },
+            "totalPages": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "email", "roles", "profile", "preferences", "transactions"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "roles": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "profile": {
+            "type": "object",
+            "required": ["age", "gender", "address"],
+            "properties": {
+              "age": { "type": "integer", "minimum": 0 },
+              "gender": { "type": "string", "enum": ["male", "female", "other"] },
+              "address": {
+                "type": "object",
+                "required": ["street", "city", "country", "coordinates"],
+                "properties": {
+                  "street": { "type": "string" },
+                  "city": { "type": "string" },
+                  "country": { "type": "string" },
+                  "coordinates": {
+                    "type": "object",
+                    "required": ["lat", "lng"],
+                    "properties": {
+                      "lat": { "type": "number" },
+                      "lng": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "preferences": {
+            "type": "object",
+            "required": ["notifications", "theme", "language"],
+            "properties": {
+              "notifications": { "type": "boolean" },
+              "theme": { "type": "string", "enum": ["dark", "light"] },
+              "language": { "type": "string" }
+            }
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "amount", "currency", "timestamp", "items"],
+              "properties": {
+                "id": { "type": "string" },
+                "amount": { "type": "number", "minimum": 0 },
+                "currency": { "type": "string" },
+                "timestamp": { "type": "string", "format": "date-time" },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["productId", "name", "price", "quantity"],
+                    "properties": {
+                      "productId": { "type": "string" },
+                      "name": { "type": "string" },
+                      "price": { "type": "number", "minimum": 0 },
+                      "quantity": { "type": "integer", "minimum": 1 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "required": ["version", "features"],
+      "properties": {
+        "version": { "type": "string" },
+        "features": {
+          "type": "object",
+          "required": ["betaAccess", "multiFactorAuth", "subscription"],
+          "properties": {
+            "betaAccess": { "type": "boolean" },
+            "multiFactorAuth": { "type": "boolean" },
+            "subscription": {
+              "type": "object",
+              "required": ["plan", "renewalDate", "features"],
+              "properties": {
+                "plan": { "type": "string" },
+                "renewalDate": { "type": "string", "format": "date-time" },
+                "features": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "logs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "level", "message", "context"],
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "level": { "type": "string", "enum": ["INFO", "WARNING", "ERROR"] },
+          "message": { "type": "string" },
+          "context": {
+            "type": "object",
+            "required": ["userId", "ip", "device"],
+            "properties": {
+              "userId": { "type": "integer" },
+              "ip": { "type": "string" },
+              "device": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
